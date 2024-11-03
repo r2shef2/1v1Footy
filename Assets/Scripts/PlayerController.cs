@@ -6,13 +6,13 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D rb;
-    public Transform groundCheck;
-    public LayerMask groundLayer;
 
     public float horizontal;
     public float speed = 8f;
     public float jumpingPower = 8f;
     private bool isFacingRight = true;
+    private bool grounded = false;
+    public ParticleSystem hitGrassParticle;
 
     private void Update()
     {
@@ -43,7 +43,32 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0f, groundLayer);
+        return grounded;
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == ("Ground") || collision.gameObject.tag == "Ball")
+        {
+            Debug.Log("OnCollisionEnter2D");
+            grounded = true;
+        }
+        else
+        {
+            grounded = false;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == ("Ground") || collision.gameObject.tag == "Ball")
+        {
+            grounded = false;
+        }
+        else
+        {
+            grounded = true;
+        }
     }
 
     private void Flip()
