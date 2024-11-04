@@ -18,26 +18,38 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
 
-        if(!isFacingRight && horizontal > 0f)
+        if (Mathf.Abs(horizontal) > 0.1f)  // Adjust dead zone threshold as needed
         {
-            Flip();
+            if (!isFacingRight && horizontal > 0f)
+            {
+                Flip();
+            }
+            else if (isFacingRight && horizontal < 0f)
+            {
+                Flip();
+            }
         }
-        else if(isFacingRight && horizontal < 0f)
-        {
-            Flip();
-        }
+    }
+
+    private void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        Vector3 flippedScale = transform.localScale;
+        flippedScale.x *= -1;
+        transform.localScale = flippedScale;
     }
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if(context.performed && IsGrounded())
+        if (context.performed && IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.y, jumpingPower);
+            rb.velocity = new Vector2(rb.velocity.x, jumpingPower); // Use rb.velocity.x for horizontal velocity
         }
 
-        if(context.canceled && rb.velocity.y > 0f)
+        // If jump input is released while ascending, reduce upward velocity for a shorter jump
+        if (context.canceled && rb.velocity.y > 0f)
         {
-            rb.velocity = new Vector2(rb.velocity.y, rb.velocity.y * 0.5f);
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f); // Preserve horizontal velocity
         }
     }
 
@@ -46,11 +58,19 @@ public class PlayerController : MonoBehaviour
         return grounded;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            // Set the vertical velocity to zero to prevent bouncing
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
+        }
+    }
+
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.tag == ("Ground") || collision.gameObject.tag == "Ball")
-        {
-            Debug.Log("OnCollisionEnter2D");
+        {                  
             grounded = true;
         }
         else
@@ -69,14 +89,6 @@ public class PlayerController : MonoBehaviour
         {
             grounded = true;
         }
-    }
-
-    private void Flip()
-    {
-        isFacingRight = !isFacingRight;
-        Vector3 flippedScale = transform.localScale;
-        flippedScale.x *= -1;
-        transform.localScale = flippedScale;
     }
 
     public void Move(InputAction.CallbackContext context)

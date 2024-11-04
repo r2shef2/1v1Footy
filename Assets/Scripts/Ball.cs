@@ -2,16 +2,20 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public float forceMultiplier = 10f; // Control the strength of the movement
-    public float upwardForce = 5f; // Control the upward force for horizontal hits
-    public float torqueMultiplier = 5f;  // Control the amount of torque to apply for forward rotation
-    public LayerMask player; // LayerMask reference for the player
-    public Rigidbody2D rb; // Reference to the Rigidbody2D on this object
+    public float forceMultiplier = 10f;
+    public float upwardForce = 5f;
+    public float torqueMultiplier = 5f;
+    public float maxAngularVelocity = 10f; // Limit to control maximum rotation speed
+    public float torqueCooldown = 0.2f; // Cooldown time for torque application
+    public LayerMask player;
+    public Rigidbody2D rb;
     public ParticleSystem hitGrass;
+    public TrailRenderer trail;
+
+    private float lastTorqueTime; // Track the last time torque was applied
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if the object that collided with this one is on the Player layer
         if (collision.gameObject.tag == GameController.PLAYER_TAG)
         {
             HitPlayer(collision);
@@ -23,6 +27,13 @@ public class Ball : MonoBehaviour
         }
     }
 
+    public void SetSimulated(bool argSimulated)
+    {
+        rb.gravityScale = argSimulated ? 1 : 0;
+        trail.enabled = argSimulated;
+        rb.freezeRotation = (argSimulated == false);
+        rb.velocity = Vector2.zero;
+    }
 
     private void HitGround(Collision2D collision)
     {
@@ -35,21 +46,31 @@ public class Ball : MonoBehaviour
         // Get the collision direction and reverse it to get the direction away from the hit
         Vector2 collisionDirection = collision.contacts[0].normal * -1;
 
-        // Check if the collision direction is mostly horizontal
-        if (Mathf.Abs(collisionDirection.y) < 0.5f) // Adjust this threshold if necessary
+        if (Mathf.Abs(collisionDirection.y) < 0.5f)
         {
-            // Add upward force to make the object move upward when hit from the side
             collisionDirection.y += upwardForce;
         }
 
-        // Normalize the direction to keep it consistent, then apply the force
         if (rb != null)
         {
             rb.AddForce(collisionDirection.normalized * forceMultiplier, ForceMode2D.Impulse);
 
-            // Determine torque direction based on the horizontal impact
-            float torqueDirection = collisionDirection.x > 0 ? 1f : -1f; // Rotate clockwise or counterclockwise based on impact
-            rb.AddTorque(torqueDirection * torqueMultiplier, ForceMode2D.Impulse);
+            // Apply torque if the cooldown period has passed
+            if (Time.time - lastTorqueTime >= torqueCooldown)
+            {
+                // Apply torque direction based on horizontal impact
+                float torqueDirection = collisionDirection.x > 0 ? 1f : -1f;
+                rb.AddTorque(torqueDirection * torqueMultiplier, ForceMode2D.Impulse);
+
+                // Update the last torque application time
+                lastTorqueTime = Time.time;
+            }
+
+            // Cap the maximum angular velocity to prevent excessive rotation
+            if (Mathf.Abs(rb.angularVelocity) > maxAngularVelocity)
+            {
+                rb.angularVelocity = Mathf.Sign(rb.angularVelocity) * maxAngularVelocity;
+            }
         }
     }
 }

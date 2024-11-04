@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
@@ -11,12 +12,31 @@ public class GameController : MonoBehaviour
     public float startTime = 60f; // Time in seconds for the countdown
     public TextMeshProUGUI timerText; // UI Text element to display the timer
 
+    [Header("Players & Ball")]
+    public Ball ball;
+    public PlayerController playerOne;
+    public PlayerController playerTwo;
+
+    public Vector2 ballRandomVariationX;
+    public Vector2 ballRandomVariationY;
+
+    [Header("Event Text")]
+    public Animation EventTextAnimation;
+    public TextMeshProUGUI EventText;
+
     [Header ("Goals")]
     public Goal playerOneGoal;
     public Goal playerTwoGoal;
+    public ParticleSystem goalScored;
 
     public TextMeshProUGUI playerOneScoreText;
     public TextMeshProUGUI playerTwoScoreText;
+
+    private Vector3 ballResetPoint;
+    private Vector3 playerOneResetPoint;
+    private Vector3 playerOneResetScale;
+    private Vector3 playerTwoResetPoint;
+    private Vector3 playerTwoResetScale;
 
     private int playerOneScore = 0;
     private int playerTwoScore = 0;
@@ -28,13 +48,41 @@ public class GameController : MonoBehaviour
     public static string GROUND_TAG = "Ground";
     public static string PLAYER_TAG = "Player";
 
+
+
     void Start()
     {
         timeRemaining = startTime;
-        timerIsRunning = true;
+
+        StopPlay();
 
         playerOneGoal.SetGoalScoredAction(GoalScored);
         playerTwoGoal.SetGoalScoredAction(GoalScored);
+         
+        ballResetPoint = ball.transform.position;
+        playerOneResetPoint = playerOne.transform.position;
+        playerTwoResetPoint = playerTwo.transform.position;
+
+        playerOneResetScale = playerOne.transform.localScale;
+        playerTwoResetScale = playerTwo.transform.localScale;
+
+        ApplyRandomBallStartVariation();
+
+        EventText.gameObject.SetActive(false);
+
+        ball.SetSimulated(false);
+
+        StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, "Kickoff!", StartPlay));
+    }
+
+    void ApplyRandomBallStartVariation()
+    {
+        float randomX = Random.Range(ballRandomVariationX.x, ballRandomVariationX.y);
+        float randomY = Random.Range(ballRandomVariationY.x, ballRandomVariationY.y);
+
+        ball.transform.position += new Vector3(randomX, randomY);
+
+        ball.SetSimulated(false);
     }
 
     void Update()
@@ -55,6 +103,18 @@ public class GameController : MonoBehaviour
         }
     }
 
+    void StartPlay()
+    {
+        timerIsRunning = true;
+        ball.SetSimulated(true);
+    }
+
+    void StopPlay()
+    {
+        timerIsRunning = false;
+        ball.SetSimulated(false);
+    }
+
     void DisplayTime(float timeToDisplay)
     {
         int minutes = Mathf.FloorToInt(timeToDisplay / 60);
@@ -71,20 +131,63 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private IEnumerator WaitForParticleEffect(ParticleSystem particleEffect, Action argOnComplete)
+    {
+        goalScored.Play();
+        yield return new WaitForSeconds(particleEffect.main.duration);
+        argOnComplete.Invoke();
+    }
+
+    private IEnumerator WaitForEventTextAnimation(Animation animationClip, string argText, Action argOnComplete)
+    {
+
+        EventText.gameObject.SetActive(true);
+        EventText.text = argText;
+        animationClip.Play();
+
+        yield return new WaitForSeconds(animationClip.clip.length);
+        argOnComplete.Invoke();
+        EventText.gameObject.SetActive(false);
+    }
+
+    private void ResetGamePositions()
+    {
+        ball.transform.position = ballResetPoint;
+        playerOne.transform.position = playerOneResetPoint;
+        playerTwo.transform.position = playerTwoResetPoint;
+
+        playerOne.transform.localScale = playerOneResetScale;
+        playerTwo.transform.localScale = playerTwoResetScale;
+
+        ApplyRandomBallStartVariation();
+    }
+
     void GoalScored(int playerNumber)
     {
+        StopPlay();
+
         if (playerNumber == 1)
         {
             playerOneScore++;
-            Debug.Log("Player One scored! Player One Score: " + playerOneScore);
         }
         else if (playerNumber == 2)
         {
             playerTwoScore++;
-            Debug.Log("Player Two scored! Player Two Score: " + playerTwoScore);
         }
 
         SetScoreTexts(playerOneScore.ToString(), playerTwoScore.ToString());
+
+        StartCoroutine(WaitForParticleEffect(goalScored, ResetGamePositions));
+
+
+        string goalText = "Goal ";
+        int appendCount = Random.Range(2, 5);  // Random.Range(2, 5) gives 2 to 4 (inclusive of 2, exclusive of 5)
+
+        for (int i = 0; i < appendCount; i++)
+        {
+            goalText += "!";
+        }
+        StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, goalText, StartPlay));
     }
 
     void SetScoreTexts(string argPlayerOneScoreText, string argPlayerTwoScoreText)
@@ -95,7 +198,32 @@ public class GameController : MonoBehaviour
 
     void TimerEnded()
     {
-        // Do something when the timer ends
-        Debug.Log("Time's up!");
+        string whoWonText = "Tie Game";
+        
+        if(playerOneScore > playerTwoScore)
+        {
+            whoWonText = "Player One Wins";
+        }
+        else if (playerTwoScore > playerOneScore)
+        {
+            whoWonText = "Player Two Wins";
+        }
+
+        DisplayTime(0);
+
+
+        StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, whoWonText, RestartGame));
     }
+
+    void RestartGame()
+    {
+        timeRemaining = startTime;
+
+        playerOneScore = 0;
+        playerTwoScore = 0;
+
+        ResetGamePositions();
+        StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, "Kickoff!", StartPlay));
+    }
+
 }

@@ -31,14 +31,51 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gameplay",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "WASD",
-                    "id": "632a6b13-7956-4684-a032-0b89c264af78",
+                    "name": "",
+                    "id": "987db725-d335-4100-9ef8-728357fb1a20",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gameplay",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Arrow Keys",
+            "id": "a6d59c02-829a-4e9c-b0a2-7cff283ebcba",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "206a852a-ca55-475f-9892-6915ac78d0ba",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "6dfe69dc-733f-4cf7-9620-772afe1e2aba",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "2D Vector",
+                    "id": "38aeb79e-154e-41bc-b5a8-e738262dc307",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
@@ -49,7 +86,7 @@
                 },
                 {
                     "name": "down",
-                    "id": "45595879-7dd5-41c7-8322-04f050a2f021",
+                    "id": "d1800f2f-58c6-4b11-82b0-97fe184fcc6c",
                     "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
@@ -60,7 +97,7 @@
                 },
                 {
                     "name": "left",
-                    "id": "5d92bf8f-28fd-4bb8-8893-8eb5ed383c41",
+                    "id": "6d0c1181-f4fb-4d29-8f3b-abce4c90fd49",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
@@ -71,7 +108,7 @@
                 },
                 {
                     "name": "right",
-                    "id": "a98ad58f-03b9-4c22-ada1-cf0733cc388f",
+                    "id": "4d530c69-c1d7-495f-8c36-903469487fe1",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
@@ -82,18 +119,7 @@
                 },
                 {
                     "name": "",
-                    "id": "987db725-d335-4100-9ef8-728357fb1a20",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3bfd711d-54fb-4eda-9345-7d52f011156c",
+                    "id": "86b576b7-a5e1-4edc-98e0-24b8b7d0185c",
                     "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
@@ -105,5 +131,16 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "Gameplay",
+            "bindingGroup": "Gameplay",
+            "devices": []
+        },
+        {
+            "name": "Keyboard",
+            "bindingGroup": "Keyboard",
+            "devices": []
+        }
+    ]
 }
