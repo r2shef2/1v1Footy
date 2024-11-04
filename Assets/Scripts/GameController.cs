@@ -8,6 +8,23 @@ using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
+    public static GameController Instance { get; private set; }
+
+    private void Awake()
+    {
+        // Check if an instance of GameController already exists
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // Destroy this instance if one already exists
+            return;
+        }
+
+        // Set the instance to this instance and mark it to persist across scenes
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+
     [Header("Timer")]
     public float startTime = 60f; // Time in seconds for the countdown
     public TextMeshProUGUI timerText; // UI Text element to display the timer
@@ -37,6 +54,8 @@ public class GameController : MonoBehaviour
     private Vector3 playerOneResetScale;
     private Vector3 playerTwoResetPoint;
     private Vector3 playerTwoResetScale;
+    public bool playerOneStartDirection;
+    public bool playerTwoStartDirection;
 
     private int playerOneScore = 0;
     private int playerTwoScore = 0;
@@ -65,6 +84,9 @@ public class GameController : MonoBehaviour
 
         playerOneResetScale = playerOne.transform.localScale;
         playerTwoResetScale = playerTwo.transform.localScale;
+
+        playerOneStartDirection = playerOne.isFacingRight;
+        playerTwoStartDirection = playerTwo.isFacingRight;
 
         ApplyRandomBallStartVariation();
 
@@ -159,6 +181,9 @@ public class GameController : MonoBehaviour
         playerOne.transform.localScale = playerOneResetScale;
         playerTwo.transform.localScale = playerTwoResetScale;
 
+        playerOne.isFacingRight = playerOneStartDirection;
+        playerTwo.isFacingRight = playerTwoStartDirection;
+
         ApplyRandomBallStartVariation();
     }
 
@@ -180,13 +205,8 @@ public class GameController : MonoBehaviour
         StartCoroutine(WaitForParticleEffect(goalScored, ResetGamePositions));
 
 
-        string goalText = "Goal ";
-        int appendCount = Random.Range(2, 5);  // Random.Range(2, 5) gives 2 to 4 (inclusive of 2, exclusive of 5)
+        string goalText = "Goal";
 
-        for (int i = 0; i < appendCount; i++)
-        {
-            goalText += "!";
-        }
         StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, goalText, StartPlay));
     }
 
@@ -223,7 +243,7 @@ public class GameController : MonoBehaviour
         playerTwoScore = 0;
 
         ResetGamePositions();
-        StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, "Kickoff!", StartPlay));
+        StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, "Kickoff", StartPlay));
     }
 
 }
