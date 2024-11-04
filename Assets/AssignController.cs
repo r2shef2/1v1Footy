@@ -9,20 +9,20 @@ public class AssignController : MonoBehaviour
     void Start()
     {
 
-            Debug.Log("Available Control Schemes:");
-            foreach (var scheme in playerInput.actions.controlSchemes)
-            {
-                Debug.Log(scheme.name);
-            }
+        Debug.Log("Available Control Schemes:");
+        foreach (var scheme in playerInput.actions.controlSchemes)
+        {
+            Debug.Log(scheme.name);
+        }
 
-            // Existing device assignment code here
+        // Existing device assignment code here
         var devices = Gamepad.all;
 
         if (devices.Count > deviceIndex)
         {
             // Use the name of your control scheme, such as "Gamepad", and pass the device as an array
             playerInput.SwitchCurrentControlScheme("Gameplay", new InputDevice[] { devices[deviceIndex] });
-            Debug.Log($"Assigned {devices[deviceIndex].displayName} to {gameObject.name}");
+            Debug.Log($"Assigned {devices[deviceIndex].displayName + deviceIndex} to {gameObject.name}");
         }
         else
         {

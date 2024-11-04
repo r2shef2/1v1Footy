@@ -37,45 +37,8 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "987db725-d335-4100-9ef8-728357fb1a20",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gameplay",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Arrow Keys",
-            "id": "a6d59c02-829a-4e9c-b0a2-7cff283ebcba",
-            "actions": [
-                {
-                    "name": "Move",
-                    "type": "Value",
-                    "id": "206a852a-ca55-475f-9892-6915ac78d0ba",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "6dfe69dc-733f-4cf7-9620-772afe1e2aba",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "2D Vector",
-                    "id": "38aeb79e-154e-41bc-b5a8-e738262dc307",
+                    "name": "Arrow Keys",
+                    "id": "d99d79fa-befc-4035-8577-1a4bf12de781",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
@@ -85,45 +48,45 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "down",
-                    "id": "d1800f2f-58c6-4b11-82b0-97fe184fcc6c",
-                    "path": "<Keyboard>/downArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "left",
-                    "id": "6d0c1181-f4fb-4d29-8f3b-abce4c90fd49",
+                    "id": "e79f1b87-204d-4900-81da-42008f971909",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gameplay",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "right",
-                    "id": "4d530c69-c1d7-495f-8c36-903469487fe1",
+                    "id": "2b4b92e6-fdd4-4d2e-ac40-285154b55de7",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gameplay",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "",
-                    "id": "86b576b7-a5e1-4edc-98e0-24b8b7d0185c",
+                    "id": "987db725-d335-4100-9ef8-728357fb1a20",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gameplay",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f0299f5-9574-491d-9c0f-2ed08d50f72e",
                     "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gameplay",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -135,11 +98,6 @@
         {
             "name": "Gameplay",
             "bindingGroup": "Gameplay",
-            "devices": []
-        },
-        {
-            "name": "Keyboard",
-            "bindingGroup": "Keyboard",
             "devices": []
         }
     ]
