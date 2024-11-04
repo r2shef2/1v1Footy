@@ -7,12 +7,29 @@ public class Ball : MonoBehaviour
     public float torqueMultiplier = 5f;
     public float maxAngularVelocity = 10f; // Limit to control maximum rotation speed
     public float torqueCooldown = 0.2f; // Cooldown time for torque application
+    public float maxYVelocity = 10f; // Maximum vertical velocity to control the height
+    public float maxXVelocity = 15f; // Maximum horizontal velocity to control side speed
     public LayerMask player;
     public Rigidbody2D rb;
     public ParticleSystem hitGrass;
     public TrailRenderer trail;
 
     private float lastTorqueTime; // Track the last time torque was applied
+
+    private void Update()
+    {
+        // Limit the vertical velocity to prevent the ball from going too high
+        if (Mathf.Abs(rb.velocity.y) > maxYVelocity)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Sign(rb.velocity.y) * maxYVelocity);
+        }
+
+        // Limit the horizontal velocity to prevent the ball from going too fast sideways
+        if (Mathf.Abs(rb.velocity.x) > maxXVelocity)
+        {
+            rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxXVelocity, rb.velocity.y);
+        }
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

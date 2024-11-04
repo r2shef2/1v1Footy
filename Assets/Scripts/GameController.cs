@@ -10,20 +10,8 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
 
-    private void Awake()
-    {
-        // Check if an instance of GameController already exists
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject); // Destroy this instance if one already exists
-            return;
-        }
-
-        // Set the instance to this instance and mark it to persist across scenes
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-
+    public OutOfBounds outOfBoundsOne;
+    public OutOfBounds outOfBoundsTwo;
 
     [Header("Timer")]
     public float startTime = 60f; // Time in seconds for the countdown
@@ -68,6 +56,20 @@ public class GameController : MonoBehaviour
     public static string PLAYER_TAG = "Player";
 
 
+    private void Awake()
+    {
+        // Check if an instance of GameController already exists
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // Destroy this instance if one already exists
+            return;
+        }
+
+        // Set the instance to this instance and mark it to persist across scenes
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
 
     void Start()
     {
@@ -77,7 +79,10 @@ public class GameController : MonoBehaviour
 
         playerOneGoal.SetGoalScoredAction(GoalScored);
         playerTwoGoal.SetGoalScoredAction(GoalScored);
-         
+
+        outOfBoundsOne.SetOutOfBoundsAction(OutOfBoundsTriggered);
+        outOfBoundsTwo.SetOutOfBoundsAction(OutOfBoundsTriggered);
+
         ballResetPoint = ball.transform.position;
         playerOneResetPoint = playerOne.transform.position;
         playerTwoResetPoint = playerTwo.transform.position;
@@ -103,8 +108,6 @@ public class GameController : MonoBehaviour
         float randomY = Random.Range(ballRandomVariationY.x, ballRandomVariationY.y);
 
         ball.transform.position += new Vector3(randomX, randomY);
-
-        ball.SetSimulated(false);
     }
 
     void Update()
@@ -172,11 +175,48 @@ public class GameController : MonoBehaviour
         EventText.gameObject.SetActive(false);
     }
 
-    private void ResetGamePositions()
+    private void ResetPositionsForGoalScored()
     {
         ball.transform.position = ballResetPoint;
         playerOne.transform.position = playerOneResetPoint;
         playerTwo.transform.position = playerTwoResetPoint;
+
+        playerOne.transform.localScale = playerOneResetScale;
+        playerTwo.transform.localScale = playerTwoResetScale;
+
+        playerOne.isFacingRight = playerOneStartDirection;
+        playerTwo.isFacingRight = playerTwoStartDirection;
+
+        ApplyRandomBallStartVariation();
+    }
+
+    void OutOfBoundsTriggered(int outOfBoundsNumber)
+    {
+        StopPlay();
+
+        // Display "Out of Bounds" event text
+        StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, "Out of Bounds", () =>
+        {
+            // Reset positions based on which out-of-bounds triggered
+            if (outOfBoundsNumber == 1)
+            {
+                ResetPositionsForOutofBounds(outOfBoundsOne.resetPositionOne, outOfBoundsOne.resetPositionTwo, outOfBoundsOne.ballResetPosition);
+            }
+            else if (outOfBoundsNumber == 2)
+            {
+                ResetPositionsForOutofBounds(outOfBoundsTwo.resetPositionOne, outOfBoundsTwo.resetPositionTwo, outOfBoundsTwo.ballResetPosition);
+            }
+
+            StartPlay();
+        }));
+    }
+
+    void ResetPositionsForOutofBounds(Vector3 positionOne, Vector3 positionTwo, Vector3 ballPosition)
+    {
+        // Reset ball and player positions based on specified positions
+        ball.transform.position = ballPosition;
+        playerOne.transform.position = positionOne;
+        playerTwo.transform.position = positionTwo;
 
         playerOne.transform.localScale = playerOneResetScale;
         playerTwo.transform.localScale = playerTwoResetScale;
@@ -202,7 +242,7 @@ public class GameController : MonoBehaviour
 
         SetScoreTexts(playerOneScore.ToString(), playerTwoScore.ToString());
 
-        StartCoroutine(WaitForParticleEffect(goalScored, ResetGamePositions));
+        StartCoroutine(WaitForParticleEffect(goalScored, ResetPositionsForGoalScored));
 
 
         string goalText = "Goal";
@@ -218,6 +258,8 @@ public class GameController : MonoBehaviour
 
     void TimerEnded()
     {
+        StopPlay();
+
         string whoWonText = "Tie Game";
         
         if(playerOneScore > playerTwoScore)
@@ -242,7 +284,9 @@ public class GameController : MonoBehaviour
         playerOneScore = 0;
         playerTwoScore = 0;
 
-        ResetGamePositions();
+        SetScoreTexts(playerOneScore.ToString(), playerTwoScore.ToString());
+
+        ResetPositionsForGoalScored();
         StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, "Kickoff", StartPlay));
     }
 
