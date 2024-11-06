@@ -7,9 +7,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3974136848325347573, guid: 83051e6353c5da64aa232c7fa643cb2d, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d1559dcaa6b500f44a8b0b2246e438e6, type: 3}
     - target: {fileID: 5743431576316186353, guid: 83051e6353c5da64aa232c7fa643cb2d, type: 3}
       propertyPath: m_Name
       value: Player2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5743431576316186357, guid: 83051e6353c5da64aa232c7fa643cb2d, type: 3}
+      propertyPath: m_Color.b
+      value: 0.1137255
+      objectReference: {fileID: 0}
+    - target: {fileID: 5743431576316186357, guid: 83051e6353c5da64aa232c7fa643cb2d, type: 3}
+      propertyPath: m_Color.g
+      value: 0.67058825
+      objectReference: {fileID: 0}
+    - target: {fileID: 5743431576316186357, guid: 83051e6353c5da64aa232c7fa643cb2d, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9568628
       objectReference: {fileID: 0}
     - target: {fileID: 5743431576316186362, guid: 83051e6353c5da64aa232c7fa643cb2d, type: 3}
       propertyPath: m_RootOrder

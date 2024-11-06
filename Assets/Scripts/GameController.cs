@@ -97,14 +97,13 @@ public class GameController : MonoBehaviour
 
         EventText.gameObject.SetActive(false);
 
-        ball.SetSimulated(false);
-
         StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, "Kickoff!", StartPlay));
     }
 
     void ApplyRandomBallStartVariation()
     {
         float randomX = Random.Range(ballRandomVariationX.x, ballRandomVariationX.y);
+
         float randomY = Random.Range(ballRandomVariationY.x, ballRandomVariationY.y);
 
         ball.transform.position += new Vector3(randomX, randomY);
@@ -114,6 +113,10 @@ public class GameController : MonoBehaviour
     {
         if (timerIsRunning)
         {
+            // update the player timers when the game is running
+            playerOne.UpdateTimers();
+            playerTwo.UpdateTimers();
+
             if (timeRemaining > 0)
             {
                 timeRemaining -= Time.deltaTime;
@@ -132,12 +135,16 @@ public class GameController : MonoBehaviour
     {
         timerIsRunning = true;
         ball.SetSimulated(true);
+        playerOne.SetAllowedMovement(true);
+        playerTwo.SetAllowedMovement(true);
     }
 
     void StopPlay()
     {
         timerIsRunning = false;
         ball.SetSimulated(false);
+        playerOne.SetAllowedMovement(false);
+        playerTwo.SetAllowedMovement(false);
     }
 
     void DisplayTime(float timeToDisplay)

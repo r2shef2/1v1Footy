@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
@@ -13,8 +14,57 @@ public class Ball : MonoBehaviour
     public Rigidbody2D rb;
     public ParticleSystem hitGrass;
     public TrailRenderer trail;
+    public float gravitySclae = 1.2f;
 
     private float lastTorqueTime; // Track the last time torque was applied
+
+    private Color originalColor;
+    [SerializeField] private Color FreezeColor;
+    [SerializeField] private SpriteRenderer ballSpriteRenderer;  // Reference to the ball's sprite renderer
+    [SerializeField] private float freezeDuration = 3f;  // Time in seconds before unfreezing if not hit
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        if (ballSpriteRenderer == null)
+        {
+            ballSpriteRenderer = GetComponent<SpriteRenderer>();
+        }
+        originalColor = ballSpriteRenderer.color;
+    }
+
+    public void FreezeBall()
+    {
+        StartCoroutine(FreezeCoroutine());
+    }
+
+    private IEnumerator FreezeCoroutine()
+    {
+        // Freeze ball and turn it blue
+        rb.velocity = Vector2.zero;
+        rb.isKinematic = true;  // Makes the ball unaffected by physics
+        ballSpriteRenderer.color = FreezeColor;
+
+        float timer = 0f;
+        bool hitByPlayer = false;
+
+        while (timer < freezeDuration)
+        {
+            timer += Time.deltaTime;
+
+            // Check if hit by a player (requires collision detection)
+            if (hitByPlayer)
+            {
+                break;  // Exit loop if hit by a player
+            }
+
+            yield return null;
+        }
+
+        // Restore the ball's original state
+        rb.isKinematic = false;
+        ballSpriteRenderer.color = originalColor;
+    }
 
     private void Update()
     {
@@ -36,6 +86,11 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.tag == GameController.PLAYER_TAG)
         {
             HitPlayer(collision);
+
+            // reset if frozen
+            StopAllCoroutines();  // Stop the freeze coroutine
+            rb.isKinematic = false;  // Restore physics
+            ballSpriteRenderer.color = originalColor;  // Restore original color
         }
 
         if (collision.gameObject.tag == GameController.GROUND_TAG)
@@ -46,10 +101,11 @@ public class Ball : MonoBehaviour
 
     public void SetSimulated(bool argSimulated)
     {
-        rb.gravityScale = argSimulated ? 1 : 0;
-        trail.enabled = argSimulated;
-        rb.freezeRotation = (argSimulated == false);
         rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        rb.gravityScale = argSimulated ? gravitySclae : 0;
+        trail.enabled = argSimulated;
+        rb.freezeRotation = !argSimulated;
     }
 
     private void HitGround(Collision2D collision)

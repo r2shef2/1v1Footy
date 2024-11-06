@@ -1,25 +1,38 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Player")]
     public Rigidbody2D rb;
-
     public float horizontal;
     public float speed = 8f;
     public float jumpingPower = 8f;
     public bool isFacingRight = true;
     private bool grounded = false;
     public ParticleSystem hitGrassParticle;
+    private bool allowMovement = true;
+    public Collider2D headCollider;
+    public Collider2D bodyCollider;
 
-    // Grappling hook variables
-    public float grappleSpeed = 15f;  // Speed at which the player is pulled towards the ball
+    [Header("Stun")]
+    public float stunDuration = 1.5f;
+    public float stunCooldown = 2.0f;  // Cooldown to prevent multiple stuns
+    private bool isStunned = false;    // Tracks if the player is already stunned
+
+    [Header("Powerup")]
+    public float grappleSpeed = 15f;
     private bool isGrappling = false;
-
-    // Line renderer variables
     public LineRenderer lineRenderer;
-    public Material lineMaterial;  // Assign this material in the inspector
+    public Material lineMaterial;
+
+    // Powerup manager reference and cooldown variables
+    public PowerupManager powerupManager;  // Reference to PowerupManager
+    [SerializeField] private float powerupCooldownDuration = 5f;
+    private float powerupCooldownTimer;
+    public Image cooldownImage;
 
     private void Start()
     {
@@ -28,26 +41,33 @@ public class PlayerController : MonoBehaviour
             lineRenderer = gameObject.AddComponent<LineRenderer>();
         }
 
-        // Configure the line renderer
+        // Configure line renderer
         lineRenderer.material = lineMaterial;
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
         lineRenderer.positionCount = 2;
-        lineRenderer.enabled = false;  // Initially disable the line
-
-        // Set the sorting layer to "Effects"
+        lineRenderer.enabled = false;
         lineRenderer.sortingLayerName = "Effects";
-        lineRenderer.sortingOrder = 1;  // Adjust as needed to control render order within the sorting layer
+        lineRenderer.sortingOrder = 1;
+
+        // Initialize cooldown timer to start in cooldown
+        powerupCooldownTimer = powerupCooldownDuration;
+
+        // Request an initial power-up assignment from the manager
+        if (powerupManager != null)
+        {
+            powerupManager.AssignRandomPowerup(this);
+        }
     }
 
     private void Update()
     {
-        if (!isGrappling)
+        if (!isGrappling && allowMovement)
         {
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
         }
 
-        if (Mathf.Abs(horizontal) > 0.1f)  // Adjust dead zone threshold as needed
+        if (Mathf.Abs(horizontal) > 0.1f)
         {
             if (!isFacingRight && horizontal > 0f)
             {
@@ -59,12 +79,53 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // Update the line position if grappling
+        // Update line position if grappling
         if (isGrappling)
         {
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, GameController.Instance.ball.transform.position);
         }
+    }
+
+    public void UpdateTimers()
+    {
+        // Update cooldown timer and assign a new power-up when timer resets
+        if (powerupCooldownTimer > 0)
+        {
+            powerupCooldownTimer -= Time.deltaTime;
+            UpdateCooldownUI();
+        }
+    }
+
+    private void UpdateCooldownUI()
+    {
+        if (cooldownImage != null)
+        {
+            // Invert fill: Start fully filled and gradually empty as cooldown completes
+            cooldownImage.fillAmount = 1 - (powerupCooldownTimer / powerupCooldownDuration);
+        }
+    }
+
+    public void SetCollisions(bool argCollisionsOn)
+    {
+        headCollider.enabled = argCollisionsOn;
+        bodyCollider.enabled = argCollisionsOn;
+    }
+
+    public void SetAllowedMovement(bool argAllow)
+    {
+        if (!argAllow)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+            horizontal = 0;
+        }
+        else
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+        allowMovement = argAllow;
     }
 
     private void Flip()
@@ -77,61 +138,104 @@ public class PlayerController : MonoBehaviour
 
     public void UsePowerup(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && powerupCooldownTimer <= 0 && powerupManager != null)
         {
-            // Start grappling towards the ball
-            StartCoroutine(GrappleToBall());
+            // Use assigned power-up and reset cooldown
+            powerupManager.UseAssignedPowerup(this);
+
+            // assign a new powerup after use
+            if (powerupCooldownTimer <= 0 && powerupManager != null)
+            {
+                powerupManager.AssignRandomPowerup(this);
+            }
+
+            powerupCooldownTimer = powerupCooldownDuration;
         }
     }
 
-    private IEnumerator GrappleToBall()
+    public IEnumerator GrappleToBall()
     {
-        isGrappling = true;
-        lineRenderer.enabled = true;  // Enable the line when grappling
-
-        while (isGrappling)
+        if (allowMovement)
         {
-            // Recalculate the direction to the ball in each frame to adjust for ball movement
-            Vector2 ballPosition = GameController.Instance.ball.transform.position;
-            Vector2 playerPosition = transform.position;
-            Vector2 directionToBall = (ballPosition - playerPosition).normalized;
+            isGrappling = true;
+            lineRenderer.enabled = true;
 
-            // Move the player towards the ball at grappleSpeed
-            rb.velocity = directionToBall * grappleSpeed;
+            while (isGrappling)
+            {
+                Vector2 ballPosition = GameController.Instance.ball.transform.position;
+                Vector2 playerPosition = transform.position;
+                Vector2 directionToBall = (ballPosition - playerPosition).normalized;
 
-            yield return null;
+                rb.velocity = directionToBall * grappleSpeed;
+
+                yield return null;
+            }
+
+            rb.velocity = Vector2.zero;
         }
-
-        // Stop movement and disable the line once grappling ends
-        rb.velocity = Vector2.zero;
         lineRenderer.enabled = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag(GameController.GROUND_TAG) || collision.gameObject.CompareTag(GameController.PLAYER_TAG))
         {
             rb.velocity = new Vector2(rb.velocity.x, 0f);
+            grounded = true;
         }
         else if (collision.gameObject.CompareTag("Ball"))
         {
-            // Stop grappling if we collide with the ball
             isGrappling = false;
-            rb.velocity = Vector2.zero;  // Stop the player upon collision with the ball
-            lineRenderer.enabled = false;  // Disable the line when grappling ends
+            rb.velocity = Vector2.zero;
+            lineRenderer.enabled = false;
         }
     }
 
+    public void ApplyStun(float duration, Vector3 hitPosition)
+    {
+        if (!isStunned)  // Only apply if not currently stunned
+        {
+            StartCoroutine(StunEffect(duration, hitPosition));
+        }
+    }
+
+    private IEnumerator StunEffect(float duration, Vector3 hitPosition)
+    {
+        isStunned = true;  // Set stunned state
+
+        SetAllowedMovement(false);
+
+        // Store the original scale of the head sprite for reset
+        Vector3 originalPosition = headCollider.transform.localPosition;
+
+        // Scale down the head sprite from the bottom (y-axis shrink)
+        headCollider.transform.localPosition = new Vector3(originalPosition.x, originalPosition.y - .3f, originalPosition.z);
+
+        yield return new WaitForSeconds(duration);
+
+        // Reset the head to its original scale
+        headCollider.transform.localPosition = originalPosition;
+
+        SetAllowedMovement(true);
+
+        yield return new WaitForSeconds(stunCooldown);  // Wait for cooldown before allowing another stun
+        isStunned = false;  // Reset stunned state
+    }
+
+
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.performed && IsGrounded())
+        if (allowMovement)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower); // Use rb.velocity.x for horizontal velocity
-        }
+            if (context.performed && IsGrounded())
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            }
 
-        if (context.canceled && rb.velocity.y > 0f)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f); // Preserve horizontal velocity
+            if (context.canceled && rb.velocity.y > 0f)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            }
         }
     }
 
@@ -142,7 +246,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Ball")
+        if (collision.gameObject.tag == GameController.GROUND_TAG || collision.gameObject.tag == GameController.PLAYER_TAG)
         {
             grounded = true;
         }
@@ -154,19 +258,15 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Ball")
+        if (collision.gameObject.tag == GameController.GROUND_TAG || collision.gameObject.tag == GameController.PLAYER_TAG)
         {
             grounded = false;
-        }
-        else
-        {
-            grounded = true;
         }
     }
 
     public void Move(InputAction.CallbackContext context)
     {
-        if (!isGrappling)  // Prevent movement while grappling
+        if (allowMovement && !isGrappling)
         {
             horizontal = context.ReadValue<Vector2>().x;
         }
