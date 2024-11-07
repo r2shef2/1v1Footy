@@ -43,10 +43,12 @@ public class Ball : MonoBehaviour
         // Freeze ball and turn it blue
         rb.velocity = Vector2.zero;
         rb.isKinematic = true;  // Makes the ball unaffected by physics
+        rb.freezeRotation = true;
         ballSpriteRenderer.color = FreezeColor;
 
         float timer = 0f;
         bool hitByPlayer = false;
+        SoundManager.Instance.PlayFreezeSound();
 
         while (timer < freezeDuration)
         {
@@ -64,6 +66,7 @@ public class Ball : MonoBehaviour
         // Restore the ball's original state
         rb.isKinematic = false;
         ballSpriteRenderer.color = originalColor;
+        SoundManager.Instance.PlayUnfreezeSound();
     }
 
     private void Update()
@@ -143,6 +146,12 @@ public class Ball : MonoBehaviour
             if (Mathf.Abs(rb.angularVelocity) > maxAngularVelocity)
             {
                 rb.angularVelocity = Mathf.Sign(rb.angularVelocity) * maxAngularVelocity;
+
+                SoundManager.Instance.PlayHardKickSound();
+            }
+            else
+            {
+                SoundManager.Instance.PlaySoftKickSound();
             }
         }
     }

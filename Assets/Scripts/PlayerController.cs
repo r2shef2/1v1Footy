@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     private bool allowMovement = true;
     public Collider2D headCollider;
     public Collider2D bodyCollider;
+    public Animator playerAnimator;
+
+    private const string IsRunningAnimatorParam = "IsRunning";
 
     [Header("Stun")]
     public float stunDuration = 1.5f;
@@ -66,6 +69,10 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
         }
+
+        // set animator
+        bool isRunning = Mathf.Abs(horizontal) > 0.1f && grounded;
+        playerAnimator.SetBool(IsRunningAnimatorParam, isRunning);
 
         if (Mathf.Abs(horizontal) > 0.1f)
         {
@@ -230,6 +237,7 @@ public class PlayerController : MonoBehaviour
             if (context.performed && IsGrounded())
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+                SoundManager.Instance.PlayJumpSound();
             }
 
             if (context.canceled && rb.velocity.y > 0f)

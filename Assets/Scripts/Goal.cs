@@ -13,6 +13,8 @@ public class Goal : MonoBehaviour
     {
         if (collision.gameObject.tag == GameController.BALL_TAG)
         {
+            SoundManager.Instance.PlayGoalSound();
+
             GoalScored.Invoke(playerGoalNumber);
 
             goalEffect.transform.position = collision.GetContact(0).point;

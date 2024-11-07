@@ -9,13 +9,12 @@ public class AnyKeySceneLoader : MonoBehaviour
     [SerializeField] private string sceneToLoad;  // Scene name to load
     [SerializeField] private float fadeDuration = 1f;  // Duration of the fade-out effect
     [SerializeField] private CanvasGroup fadeCanvasGroup;  // CanvasGroup for fading
-    [SerializeField] private Animation playAnimation;  // CanvasGroup for fading
 
     private InputAction anyKeyAction;
 
     private void OnEnable()
     {
-        playAnimation.Play();
+        StartCoroutine(FadeInScene());
 
         // Initialize and enable the InputAction for any key press
         anyKeyAction = new InputAction(binding: "<Keyboard>/anyKey");
@@ -30,6 +29,17 @@ public class AnyKeySceneLoader : MonoBehaviour
         // Disable the InputAction to clean up when the script is disabled
         anyKeyAction.Disable();
         anyKeyAction.performed -= _ => StartCoroutine(FadeAndLoadScene());
+    }
+
+    private IEnumerator FadeInScene()
+    {
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            fadeCanvasGroup.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);  // Gradually increase alpha
+            yield return null;
+        }
     }
 
     private IEnumerator FadeAndLoadScene()

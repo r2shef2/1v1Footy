@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8abf8cacf32713e42b4f02f857014dc2, type: 3}
+  m_Name: Rock
+  m_EditorClassIdentifier: 
+  characterName: Rock
+  mainColor: {r: 0, g: 0.6313726, b: 0.654902, a: 1}
+  shoeColor: {r: 0.9607844, g: 0.63529414, b: 0.6862745, a: 1}
+  animator: {fileID: 0}
+  collider: {fileID: 1535543699254432286, guid: 0de4dbacfbdd7164fbb8e9a03c2e5edc, type: 3}
+  headSprite: {fileID: 21300000, guid: a4f0fce4584beb1429f92f37859acb03, type: 3}

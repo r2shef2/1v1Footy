@@ -28,6 +28,7 @@ public class PlayerStompDetector : MonoBehaviour
             {
                 // Apply stun to the other player and play the stun effect
                 otherPlayerController.ApplyStun(stunDuration, transform.position);
+                SoundManager.Instance.PlayStunSound();
                 PlayStunEffect();
             }
         }

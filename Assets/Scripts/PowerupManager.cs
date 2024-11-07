@@ -69,9 +69,11 @@ public class PowerupManager : MonoBehaviour
 
     private IEnumerator ApplySpeedBoost(PlayerController player)
     {
+        SoundManager.Instance.PlayPlayerSpeedUpSound();
         float originalSpeed = player.speed;
         player.speed *= 1.5f;
         yield return new WaitForSeconds(3f);
+        SoundManager.Instance.PlayPlayerSlowDownSound();
         player.speed = originalSpeed;
     }
 

@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 855975837607547898}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1.7101011}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1.7101011}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 321528507822756506}
@@ -218,7 +218,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5743431576316186362}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2482181214044284135
 SpriteRenderer:
@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73486fcb759d78849843d824dd641799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stunDuration: 1
+  stunDuration: 0.65
   stunParticleEffect: {fileID: 0}
 --- !u!1 &4691277153689791579
 GameObject:
@@ -337,12 +337,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4691277153689791579}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.04100001, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 2.4661114}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5743431576316186362}
-  m_RootOrder: 1
+  m_Father: {fileID: 2529894422832923634}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2197721287510925181
 SpriteRenderer:
@@ -408,6 +408,7 @@ GameObject:
   - component: {fileID: 5743431576316186359}
   - component: {fileID: 5743431576316186358}
   - component: {fileID: 5743431576316186360}
+  - component: {fileID: 8223874364108546933}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -428,7 +429,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5234953447602627957}
-  - {fileID: 5428036199202660924}
   - {fileID: 2529894422832923634}
   - {fileID: 6233718028210638840}
   m_Father: {fileID: 0}
@@ -532,9 +532,9 @@ MonoBehaviour:
   hitGrassParticle: {fileID: 0}
   headCollider: {fileID: 7971048645099590650}
   bodyCollider: {fileID: 619236696910413345}
+  playerAnimator: {fileID: 8223874364108546933}
   stunDuration: 1.5
   stunCooldown: 0.2
-  stunParticleEffect: {fileID: 0}
   grappleSpeed: 21
   lineRenderer: {fileID: 0}
   lineMaterial: {fileID: 2100000, guid: 08cb3228052029b4aba143035d4126ac, type: 2}
@@ -562,6 +562,26 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!95 &8223874364108546933
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5743431576316186353}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bc4fd01a79dc3ed4bb10803d20288028, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8111408333657147915
 GameObject:
   m_ObjectHideFlags: 0
@@ -589,11 +609,12 @@ Transform:
   m_GameObject: {fileID: 8111408333657147915}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.4054967}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4054967}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5428036199202660924}
   m_Father: {fileID: 5743431576316186362}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2650619798951834985
 SpriteRenderer:

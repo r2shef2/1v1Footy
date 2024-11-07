@@ -109,6 +109,9 @@ public class GameController : MonoBehaviour
         ball.transform.position += new Vector3(randomX, randomY);
     }
 
+
+    private float soundTimer;
+
     void Update()
     {
         if (timerIsRunning)
@@ -119,6 +122,18 @@ public class GameController : MonoBehaviour
 
             if (timeRemaining > 0)
             {
+                if (timeRemaining <= 5.0f)
+                {
+                    // Play countdown sound every second
+                    soundTimer += Time.deltaTime;
+                    float timeBetweenSounds = 1f;
+                    if (soundTimer >= timeBetweenSounds)
+                    {
+                        SoundManager.Instance.PlayCountdownSound(); // Use your SoundManager to play sound
+                        soundTimer = 0f; // Reset sound timer for the next second
+                    }
+                }
+
                 timeRemaining -= Time.deltaTime;
                 DisplayTime(timeRemaining);
             }
@@ -266,6 +281,8 @@ public class GameController : MonoBehaviour
     void TimerEnded()
     {
         StopPlay();
+
+        SoundManager.Instance.PlayTimerEndSound();
 
         string whoWonText = "Tie Game";
         

@@ -16,6 +16,8 @@ public class OutOfBounds : MonoBehaviour
         {
             // Invoke the out of bounds action, passing the outOfBoundsNumber
             OutOfBoundsTriggered.Invoke(outOfBoundsNumber);
+
+            SoundManager.Instance.PlayOutOfBoundsSound();
         }
     }
 

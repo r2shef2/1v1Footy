@@ -210,8 +210,9 @@ Animation:
   m_GameObject: {fileID: 381417224}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
+  m_Animation: {fileID: 7400000, guid: b8b619261b8cb50448c4be94f679f7bd, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: b8b619261b8cb50448c4be94f679f7bd, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -351,10 +352,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e070d06ba13d3ab4ba79883a82d24d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: Game
-  fadeDuration: 1
+  sceneToLoad: Character
+  fadeDuration: 1.5
   fadeCanvasGroup: {fileID: 1614006803}
-  playAnimation: {fileID: 2050298197}
 --- !u!114 &1540536676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -551,7 +551,6 @@ GameObject:
   - component: {fileID: 2050298196}
   - component: {fileID: 2050298199}
   - component: {fileID: 2050298198}
-  - component: {fileID: 2050298197}
   m_Layer: 5
   m_Name: EventText
   m_TagString: Untagged
@@ -579,22 +578,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!111 &2050298197
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2050298195}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 48281798aab64ed4e9fdb694d96b89d5, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 48281798aab64ed4e9fdb694d96b89d5, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &2050298198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -615,7 +598,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Play
+  m_text: Press to Start
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32fa32f2f59ad78428c232842ecfc3e1, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 7097ebe2a81dbf549a074119b2ac697b, type: 2}
@@ -642,7 +625,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 178.65
+  m_fontSize: 148.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

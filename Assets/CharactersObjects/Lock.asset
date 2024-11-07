@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8abf8cacf32713e42b4f02f857014dc2, type: 3}
+  m_Name: Lock
+  m_EditorClassIdentifier: 
+  characterName: Lock
+  mainColor: {r: 0.96470594, g: 0.7803922, b: 0.3372549, a: 1}
+  shoeColor: {r: 0, g: 0.6313726, b: 0.654902, a: 1}
+  animator: {fileID: 0}
+  collider: {fileID: 3758594752514097994, guid: 663e665c068454e479a93375b0941e66, type: 3}
+  headSprite: {fileID: 21300000, guid: d1559dcaa6b500f44a8b0b2246e438e6, type: 3}
