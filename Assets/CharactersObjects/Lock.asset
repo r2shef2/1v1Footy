@@ -18,3 +18,6 @@ MonoBehaviour:
   animator: {fileID: 0}
   collider: {fileID: 3758594752514097994, guid: 663e665c068454e479a93375b0941e66, type: 3}
   headSprite: {fileID: 21300000, guid: d1559dcaa6b500f44a8b0b2246e438e6, type: 3}
+  face: {fileID: 21300000, guid: b70182892785ff14d9ea49e2f6f57777, type: 3}
+  stunnedFace: {fileID: 21300000, guid: b39b43e99d552e44695d95196b30f0a4, type: 3}
+  scoredFace: {fileID: 21300000, guid: 8642632011c2c884aad76a2e2117dc19, type: 3}

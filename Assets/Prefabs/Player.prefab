@@ -285,7 +285,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.16811812, y: 1.0245308}
+  m_Offset: {x: -0.16811812, y: 0.5791998}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -296,7 +296,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.8814836, y: 3.0490615}
+  m_Size: {x: 1.8814836, y: 3.0490627}
   m_EdgeRadius: 0
 --- !u!114 &6650698866083226498
 MonoBehaviour:
@@ -507,6 +507,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 10e33d5f-020e-4428-b422-2990d6c85a86
     m_ActionName: Gameplay/UsePower[/XInputControllerWindows1/buttonEast,/XInputControllerWindows2/buttonEast,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 77422d45-ab38-40b6-80ab-17d6754ac774
+    m_ActionName: Gameplay/OnPlayer1Next[/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ac87787e-5bc2-4532-aa56-6bbf4fdfda0d
+    m_ActionName: Gameplay/OnPlayer1Previous[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b4fc7b13-b438-4a9b-a782-ff7a3846ee11
+    m_ActionName: Gameplay/OnPlayer2Next[/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 360855d4-976a-4b4c-b71e-b069487d1fa2
+    m_ActionName: Gameplay/OnPlayer2Previous[/Keyboard/leftArrow]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gameplay
   m_DefaultActionMap: Gameplay
@@ -532,7 +548,10 @@ MonoBehaviour:
   hitGrassParticle: {fileID: 0}
   headCollider: {fileID: 7971048645099590650}
   bodyCollider: {fileID: 619236696910413345}
+  cleatsSprite: {fileID: 2650619798951834985}
+  faceSprite: {fileID: 8937280912522383765}
   playerAnimator: {fileID: 8223874364108546933}
+  characterData: {fileID: 11400000, guid: 97972c5b6c534014b82856da6e00d66a, type: 2}
   stunDuration: 1.5
   stunCooldown: 0.2
   grappleSpeed: 21

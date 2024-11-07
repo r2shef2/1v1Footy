@@ -9,4 +9,7 @@ public class CharacterData : ScriptableObject
     public Animator animator;
     public Collider2D collider;
     public Sprite headSprite;
+    public Sprite face;
+    public Sprite stunnedFace;
+    public Sprite scoredFace;
 }

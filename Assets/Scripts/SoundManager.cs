@@ -36,6 +36,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip grappleSound;
     [SerializeField, Range(0.1f, 3f)] private float grappleSoundPitch = 1.0f;
 
+    [SerializeField] private AudioClip grappleHitSound;
+    [SerializeField, Range(0.1f, 3f)] private float grappleHitSoundPitch = 1.0f;
+
     [SerializeField] private AudioClip freezeSound;
     [SerializeField, Range(0.1f, 3f)] private float freezeSoundPitch = 1.0f;
 
@@ -102,6 +105,7 @@ public class SoundManager : MonoBehaviour
     public void PlayCountdownSound() => PlaySoundEffect(countdownSound, countdownSoundPitch);
     public void PlayTimerEndSound() => PlaySoundEffect(timerEndSound, timerEndPitch);
     public void PlayGrappleSound() => PlaySoundEffect(grappleSound, grappleSoundPitch);
+    public void PlayGrappleHitSound() => PlaySoundEffect(grappleHitSound, grappleHitSoundPitch);
     public void PlayFreezeSound() => PlaySoundEffect(freezeSound, freezeSoundPitch);
     public void PlayUnfreezeSound() => PlaySoundEffect(unfreezeSound, unfreezeSoundPitch);
     public void PlayPlayerSpeedUpSound() => PlaySoundEffect(playerSpeedUpSound, playerSpeedUpPitch);

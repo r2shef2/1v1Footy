@@ -59,6 +59,7 @@ public class CharacterSelectionManager : MonoBehaviour
 
     public void OnPlayer2Next()
     {
+        Debug.Log("On PLayer 2 Next");
         player2Index = GetNextAvailableCharacter(player2Index, player1Index);
         Player2Character = availableCharacters[player2Index];
         UpdateUI();

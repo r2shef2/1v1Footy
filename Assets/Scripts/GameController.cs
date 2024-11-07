@@ -37,6 +37,9 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI playerOneScoreText;
     public TextMeshProUGUI playerTwoScoreText;
 
+    public Image P1Arrow;
+    public Image P2Arrow;
+
     private Vector3 ballResetPoint;
     private Vector3 playerOneResetPoint;
     private Vector3 playerOneResetScale;
@@ -54,6 +57,44 @@ public class GameController : MonoBehaviour
     public static string BALL_TAG = "Ball";
     public static string GROUND_TAG = "Ground";
     public static string PLAYER_TAG = "Player";
+
+    CharacterData P1Character;
+    CharacterData P2Character;
+
+
+    private void SetUpGameForPlayers()
+    {
+        // Set up players and game field
+        P1Character = CharacterSelectionManager.Instance.Player1Character;
+        P2Character = CharacterSelectionManager.Instance.Player2Character;
+
+        playerOne.characterData = P1Character;
+        playerTwo.characterData = P2Character;
+
+        playerOne.headCollider.GetComponent<SpriteRenderer>().sprite = P1Character.headSprite;
+        playerTwo.headCollider.GetComponent<SpriteRenderer>().sprite = P2Character.headSprite;
+
+        playerOne.headCollider = P1Character.collider;
+        playerTwo.headCollider = P2Character.collider;
+
+        playerOne.cleatsSprite.color = P1Character.shoeColor;
+        playerTwo.cleatsSprite.color = P2Character.shoeColor;
+
+        playerTwo.cleatsSprite.color = P2Character.shoeColor;
+        playerTwo.cleatsSprite.color = P2Character.shoeColor;
+
+        playerOneScoreText.color = P1Character.mainColor;
+        playerTwoScoreText.color = P2Character.mainColor;
+
+        playerOne.cooldownImage.color = P1Character.mainColor;
+        playerTwo.cooldownImage.color = P2Character.mainColor;
+
+        P1Arrow.color = P1Character.mainColor;
+        P2Arrow.color = P2Character.mainColor;
+
+        playerOne.faceSprite.sprite = P1Character.face;
+        playerTwo.faceSprite.sprite = P2Character.face;
+    }
 
 
     private void Awake()
@@ -76,6 +117,11 @@ public class GameController : MonoBehaviour
         timeRemaining = startTime;
 
         StopPlay();
+
+        if(CharacterSelectionManager.Instance != null)
+        {
+            SetUpGameForPlayers();
+        }
 
         playerOneGoal.SetGoalScoredAction(GoalScored);
         playerTwoGoal.SetGoalScoredAction(GoalScored);
@@ -209,6 +255,9 @@ public class GameController : MonoBehaviour
         playerOne.isFacingRight = playerOneStartDirection;
         playerTwo.isFacingRight = playerTwoStartDirection;
 
+        playerOne.faceSprite.sprite = playerOne.characterData.face;
+        playerTwo.faceSprite.sprite = playerTwo.characterData.face;
+
         ApplyRandomBallStartVariation();
     }
 
@@ -256,10 +305,14 @@ public class GameController : MonoBehaviour
         if (playerNumber == 1)
         {
             playerOneScore++;
+            playerOne.faceSprite.sprite = playerOne.characterData.scoredFace;
+            playerTwo.faceSprite.sprite = playerTwo.characterData.stunnedFace;
         }
         else if (playerNumber == 2)
         {
             playerTwoScore++;
+            playerTwo.faceSprite.sprite = playerTwo.characterData.scoredFace;
+            playerOne.faceSprite.sprite = playerOne.characterData.stunnedFace;
         }
 
         SetScoreTexts(playerOneScore.ToString(), playerTwoScore.ToString());
@@ -280,6 +333,8 @@ public class GameController : MonoBehaviour
 
     void TimerEnded()
     {
+        DisplayTime(0);
+
         StopPlay();
 
         SoundManager.Instance.PlayTimerEndSound();
@@ -288,15 +343,14 @@ public class GameController : MonoBehaviour
         
         if(playerOneScore > playerTwoScore)
         {
-            whoWonText = "Player One Wins";
+            whoWonText = P1Character.name + " Wins";
+            EventText.color = P1Character.mainColor;
         }
         else if (playerTwoScore > playerOneScore)
         {
-            whoWonText = "Player Two Wins";
+            whoWonText = P2Character.name + " Wins";
+            EventText.color = P2Character.mainColor;
         }
-
-        DisplayTime(0);
-
 
         StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, whoWonText, RestartGame));
     }
@@ -311,7 +365,8 @@ public class GameController : MonoBehaviour
         SetScoreTexts(playerOneScore.ToString(), playerTwoScore.ToString());
 
         ResetPositionsForGoalScored();
-        StartCoroutine(WaitForEventTextAnimation(EventTextAnimation, "Kickoff", StartPlay));
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
     }
 
 }

@@ -16,7 +16,11 @@ public class PlayerController : MonoBehaviour
     private bool allowMovement = true;
     public Collider2D headCollider;
     public Collider2D bodyCollider;
+    public SpriteRenderer cleatsSprite;
+    public SpriteRenderer faceSprite;
     public Animator playerAnimator;
+
+    public CharacterData characterData;
 
     private const string IsRunningAnimatorParam = "IsRunning";
 
@@ -162,6 +166,8 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator GrappleToBall()
     {
+        SoundManager.Instance.PlayGrappleSound();
+
         if (allowMovement)
         {
             isGrappling = true;
@@ -192,6 +198,11 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Ball"))
         {
+            if(isGrappling)
+            {
+                SoundManager.Instance.PlayGrappleHitSound();
+            }
+
             isGrappling = false;
             rb.velocity = Vector2.zero;
             lineRenderer.enabled = false;
@@ -218,7 +229,12 @@ public class PlayerController : MonoBehaviour
         // Scale down the head sprite from the bottom (y-axis shrink)
         headCollider.transform.localPosition = new Vector3(originalPosition.x, originalPosition.y - .3f, originalPosition.z);
 
+        // Change sprite
+        faceSprite.sprite = characterData.stunnedFace;
+
         yield return new WaitForSeconds(duration);
+
+        faceSprite.sprite = characterData.face;
 
         // Reset the head to its original scale
         headCollider.transform.localPosition = originalPosition;

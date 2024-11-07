@@ -12,6 +12,8 @@ public class CharacterSelectionInput : MonoBehaviour
     public TextMeshProUGUI P1Text;
     public TextMeshProUGUI P2Text;
 
+    public TextMeshProUGUI bugText;
+
     private const string wasd = "WASD and Space Bar";
     private const string arrowkeys = "Arrow Keys and Right Shift";
     private const string controller = "Controller";
@@ -62,6 +64,8 @@ public class CharacterSelectionInput : MonoBehaviour
             player2Input.SwitchCurrentControlScheme("Gameplay", new InputDevice[] { gamepads[1] });
             Debug.Log($"Assigned {gamepads[1].displayName} to Player 2");
             P2Text.text = controller + " " + 2;
+
+            bugText.gameObject.SetActive(true);
         }
         else if (gamepads.Count == 1)
         {
@@ -74,6 +78,9 @@ public class CharacterSelectionInput : MonoBehaviour
             Debug.Log("Player 2 using keyboard as no second gamepad is connected.");
             player2Input.SwitchCurrentControlScheme("Keyboard2", new InputDevice[] { Keyboard.current });
             P2Text.text = arrowkeys;
+
+            bugText.gameObject.SetActive(true);
+
         }
         else
         {
@@ -84,6 +91,9 @@ public class CharacterSelectionInput : MonoBehaviour
             P1Text.text = wasd;
             player2Input.SwitchCurrentControlScheme("Keyboard2", new InputDevice[] { Keyboard.current });
             P2Text.text = arrowkeys;
+
+            bugText.gameObject.SetActive(false);
+
         }
     }
     

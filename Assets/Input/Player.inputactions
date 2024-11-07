@@ -40,6 +40,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "OnPlayer1Previous",
+                    "type": "Button",
+                    "id": "ac87787e-5bc2-4532-aa56-6bbf4fdfda0d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "OnPlayer2Next",
+                    "type": "Button",
+                    "id": "b4fc7b13-b438-4a9b-a782-ff7a3846ee11",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "OnPlayer2Previous",
+                    "type": "Button",
+                    "id": "360855d4-976a-4b4c-b71e-b069487d1fa2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -194,6 +221,39 @@
                     "processors": "",
                     "groups": "Keyboard1",
                     "action": "OnPlayer1Next",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1982f3e4-fa6b-4a0d-b9da-6f95c5d72b4d",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard1",
+                    "action": "OnPlayer1Previous",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3241081-e718-44fc-a5b2-a80c07525191",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard2",
+                    "action": "OnPlayer2Next",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e72dcff4-e297-404f-9c4e-b9a1adde8a08",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard2",
+                    "action": "OnPlayer2Previous",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
